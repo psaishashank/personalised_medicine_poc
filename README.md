@@ -16,3 +16,7 @@ streamlit run search_tool.py
 ```
 - This opens the tool in a web browser. Select the gene and allele combination from the drop down. Also select the source of information. If you want to view all , select all and click on search.
 
+
+### DB Schema
+
+![image info](./db_schema.svg)
