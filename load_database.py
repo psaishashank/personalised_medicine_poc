@@ -54,14 +54,17 @@ def insert_data_tables(cur,con):
     drug_data = [
                 (1,'CELEXA','CITALOPRAM HYDROBROMIDE'),
                 (2,'ORILISSA','ELAGOLIX SODIUM'),
-                (3,'amitriptyline',None)
+                (3,'amitriptyline',None),
+                (4,'voriconazole','VORICONAZOLE')
             ]
     
     drug_market_data = [
             (1,1,'EQ 10MG BASE','TABLET;ORAL','Prescription'),
             (2,1,'EQ 60MG BASE','TABLET;ORAL','Discontinued'),
             (3,2,'EQ 150MG BASE','TABLET;ORAL','Prescription'),
-            (4,2,'EQ 200MG BASE','TABLET;ORAL','Prescription')
+            (4,2,'EQ 200MG BASE','TABLET;ORAL','Prescription'),
+            (5,4,'50MG','TABLET;ORAL','Prescription'),
+            (6,4,'200MG','TABLET;ORAL','Prescription'),
             ]
 
     gene_data = [
@@ -75,7 +78,11 @@ def insert_data_tables(cur,con):
     drug_gene_data = [
                     (1,1,1,'FDA','Per the FDA warning, citalopram 20 mg/day is the maximum recommended dose in CYP2C19 poor metabolizers due to the risk of QT prolongation. FDA product labeling additionally cautions that citalopram dose should be limited to 20 mg/day in patients with hepatic impairment, those taking a CYP2C19 inhibitor, and patients greater than 60 years of age.'),
                     (2,1,1,'CPIC','Consider a clinically appropriate antidepressant not predominantly metabolized by CYP2C19. If citalopram or escitalopram are clinically appropriate, consider a lower starting dose, slower titration schedule and 50% reduction of the standard maintenance dose as compared to normal metabolizers.'),
-                    (3,1,1,'CPIC','Avoid tertiary amine use due to potential for sub-optimal response. Consider alternative drug not metabolized by CYP2C19. TCAs without major CYP2C19 metabolism include the secondary amines nortriptyline and desipramine. For tertiary amines, consider a 50% reduction of the recommended starting dose. Utilize therapeutic drug monitoring to guide dose adjustments. Titrate dose to observed clinical response with symptom improvement and minimal  side effects.')
+                    (3,3,1,'CPIC','Avoid tertiary amine use due to potential for sub-optimal response. Consider alternative drug not metabolized by CYP2C19. TCAs without major CYP2C19 metabolism include the secondary amines nortriptyline and desipramine. For tertiary amines, consider a 50% reduction of the recommended starting dose. Utilize therapeutic drug monitoring to guide dose adjustments. Titrate dose to observed clinical response with symptom improvement and minimal  side effects.'),
+                    (4,4,1,'CPIC','Choose an alternative agent that is not dependent on CYP2C19 metabolism as primary therapy in lieu of voriconazole. Such agents include isavuconazole, liposomal amphotericin B, and posaconazole. In the event that voriconazole is considered to be the most appropriate agent, based on clinical advice, for a patient with poor metabolizer genotype, voriconazole should be administered at a preferably lower than standard dosage with careful therapeutic drug monitoring.')
+
+
+
 
             ]
 
