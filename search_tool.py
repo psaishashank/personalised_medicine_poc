@@ -4,36 +4,54 @@ import pandas as pd
 
 # Connect to SQLite database
 def get_db_connection():
-    conn = sqlite3.connect('pharma.db')
+    conn = sqlite3.connect('drug.db')
     return conn
 
 # Create a function to query data based on user inputs
-def search_recommendations(drug, genome, source):
-    data = [{"name":"sai","age":10},{"name":"maxi","age":12},{"name":"cae","age":30}]
-    return pd.DataFrame(data)
-    # conn = get_db_connection()
-    # query = """
-    # SELECT D.drug_name, G.genome_name, DR.recommendation, DR.source
-    # FROM DosingRecommendations DR
-    # JOIN Drugs D ON DR.drug_id = D.drug_id
-    # JOIN Genomes G ON DR.genome_id = G.genome_id
-    # WHERE D.drug_name = ? AND G.genome_name = ? AND DR.source = ?
-    # """
-    # df = pd.read_sql(query, conn, params=(drug, genome, source))
-    # conn.close()
-    # return df
+def search_recommendations(user_genome, user_source):
+    conn = get_db_connection()
+    query = f"""
+        SELECT  DD.drug_name, DD.active_ingredients, D.source, D.recommendation
+        FROM drug_gene_guidance D
+        INNER JOIN gene_data gd  ON D.gene_id = gd.id
+        INNER JOIN drugs_data DD ON DD.id = D.drug_id
+        WHERE gd.gene = ? AND gd.alleles = ? AND (D.source = ? OR ? = 'all');
+
+    """
+    df = pd.read_sql(query, conn, params=(user_genome.split(" : ")[0],user_genome.split(" : ")[1],user_source,user_source))
+    conn.close()
+    return df
 
 # Streamlit UI
 def main():
     # Set page configuration and background
     st.set_page_config(page_title="Drug-Genome Search", layout="centered")
     st.markdown(
-        """
-        <style>
-        .main {
-            background-color: #8F20F9;
-        }
-        </style>
+    """
+    <style>
+    .main {
+        background-color: #D86C70;
+    }
+    h1 {
+        color: #800000;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .stButton>button {
+        background-color: #800000;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+    .stButton>button:hover {
+        background-color: #a52a2a;
+    }
+    .css-1d391kg p {
+        color: #333;
+        font-family: 'Arial', sans-serif;
+    }
+    </style>
         """, 
         unsafe_allow_html=True
     )
@@ -44,18 +62,16 @@ def main():
     # Initialize search form
     with st.form(key='search_form'):
         # Dropdown for Drugs
-        # conn = get_db_connection()
-        # drugs = pd.read_sql("SELECT drug_name FROM Drugs", conn)['drug_name'].tolist()
-        # genomes = pd.read_sql("SELECT genome_name FROM Genomes", conn)['genome_name'].tolist()
-        # sources = pd.read_sql("SELECT DISTINCT source FROM DosingRecommendations", conn)['source'].tolist()
-        drugs = ["paracetmol","citrazine","allegra"]
-        genomes = ["AABJF","AS2*/3","BBCC"]
-        sources = ["FDA","DHA"]
-        # conn.close()
+        conn = get_db_connection()
+        # drugs = pd.read_sql("SELECT drug_name FROM drugs_data", conn)['drug_name'].tolist()
+        genomes = pd.read_sql("SELECT gene || ' : ' || alleles as gene FROM gene_data", conn)['gene'].tolist()
+        sources = pd.read_sql("SELECT DISTINCT source FROM drug_gene_guidance", conn)['source'].tolist()
+        sources.append("all")
+        conn.close()
         
-        selected_drug = st.selectbox("Select Drug", drugs)
+
         selected_genome = st.selectbox("Select Genome", genomes)
-        selected_source = st.selectbox("Select Source", sources)
+        selected_source = st.selectbox("Select Source, select all to include all sources", sources)
         
         # Search button
         search = st.form_submit_button(label='Search')
@@ -63,11 +79,11 @@ def main():
     # Display search results
     if search:
         # Query the database
-        results_df = search_recommendations(selected_drug, selected_genome, selected_source)
+        results_df = search_recommendations(selected_genome, selected_source)
         
         # Hide form elements and show results
-        st.empty()  # Clears the form
-        st.dataframe(results_df)  # Display the results in a dataframe
+        st.empty() 
+        st.dataframe(results_df, use_container_width=True)
         
         # Back button to reset view
         if st.button('Back to Search'):
