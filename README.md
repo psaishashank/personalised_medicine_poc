@@ -19,4 +19,4 @@ streamlit run search_tool.py
 
 ### DB Schema
 
-![image info](./db_schema.svg)
+![image info](./db_schema.png)
