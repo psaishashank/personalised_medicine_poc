@@ -1,4 +1,4 @@
-# personalised_medicine_poc
+# Personalised Medicine poc
 
 ## SImple Search Tool to find FDA and NPIC recommendations for a drug for the genome type.
 
